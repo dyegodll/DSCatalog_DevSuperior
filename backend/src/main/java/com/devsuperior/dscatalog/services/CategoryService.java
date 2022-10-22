@@ -1,11 +1,13 @@
 package com.devsuperior.dscatalog.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.devsuperior.dscatalog.dto.CategoryDTO;
 import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.repositories.CategoryRepository;
 
@@ -19,8 +21,18 @@ public class CategoryService {
 	
 	//garante a transação com o banco e informa que é somente leitura para não travar o banco(lock)
 	@Transactional(readOnly = true) //obs.: import do Spring e não javax
-	public List<Category> findAll(){
-		return repository.findAll();
+	public List<CategoryDTO> findAll(){
+		List<Category> list = repository.findAll(); //busca informações no banco
+		
+		/*forma 1: 
+		 * List<CategoryDTO> listDto = new ArrayList<>(); //converte a lista para tipo
+		 * DTO for(Category cat : list) { listDto.add(new CategoryDTO(cat)); }
+		 * 
+		 * return listDto; //retorna a lista DTO
+		 */	
+
+		//forma 2: expressão lambda!
+		return list.stream().map( x -> new CategoryDTO(x)).collect(Collectors.toList());
 	}
 	
 }

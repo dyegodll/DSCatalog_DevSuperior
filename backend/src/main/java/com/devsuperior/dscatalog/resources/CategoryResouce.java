@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,4 +27,9 @@ public class CategoryResouce {
 		return ResponseEntity.ok().body(list); //passa a lista como resposta
 	}
 
+	@GetMapping(value = "/{id}") //sequencia do endpoint categories (ex: host/categories/1)
+	public ResponseEntity<CategoryDTO> findById(@PathVariable Long id){ //anotation vincula o endpoit ao parâmetro do método
+		CategoryDTO dto = service.findById(id);
+		return ResponseEntity.ok().body(dto); 
+	}
 }

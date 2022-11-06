@@ -1,6 +1,7 @@
 package com.devsuperior.dscatalog.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,21 @@ public class CategoryService {
 		List<Category> list = repository.findAll(); //busca informações no banco
 		
 		/*forma 1: 
-		 * List<CategoryDTO> listDto = new ArrayList<>(); //converte a lista para tipo
-		 * DTO for(Category cat : list) { listDto.add(new CategoryDTO(cat)); }
-		 * 
-		 * return listDto; //retorna a lista DTO
+		  List<CategoryDTO> listDto = new ArrayList<>(); //converte a lista para tipo
+		  DTO for(Category cat : list) { listDto.add(new CategoryDTO(cat)); }
+		 
+		  return listDto; //retorna a lista DTO
 		 */	
 
 		//forma 2: expressão lambda!
 		return list.stream().map( x -> new CategoryDTO(x)).collect(Collectors.toList());
+	}
+	
+	@Transactional(readOnly = true)
+	public CategoryDTO findById(Long id){
+		Optional<Category> obj = repository.findById(id); //classe Optional<E> retorna objetos diferente de nulos
+		Category entity = obj.get(); //captura objeto do Optional
+		return new CategoryDTO(entity);
 	}
 	
 }

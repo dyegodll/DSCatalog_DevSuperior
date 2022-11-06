@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +41,8 @@ public class CategoryService {
 	@Transactional(readOnly = true)
 	public CategoryDTO findById(Long id){
 		Optional<Category> obj = repository.findById(id); //classe Optional<E> retorna objetos diferente de nulos
-		Category entity = obj.get(); //captura objeto do Optional
+		//Category entity = obj.get(); //captura objeto do Optional
+		Category entity = obj.orElseThrow( () -> new EntityNotFoundException("Essa Categoria não existe!") );//tenta capturar o obj, caso não exista executa a exceção personalizada criada através da função lambda
 		return new CategoryDTO(entity);
 	}
 	

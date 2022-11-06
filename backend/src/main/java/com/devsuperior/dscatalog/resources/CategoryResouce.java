@@ -27,8 +27,8 @@ public class CategoryResouce {
 		return ResponseEntity.ok().body(list); //passa a lista como resposta
 	}
 
-	@GetMapping(value = "/{id}") //sequencia do endpoint categories (ex: host/categories/1)
-	public ResponseEntity<CategoryDTO> findById(@PathVariable Long id){ //anotation vincula o endpoit ao parâmetro do método
+	@GetMapping(value = "/{id}") //sequencia do endpoint categories (ex: host/categories/1) //@PathVariable vincula o endpoit ao parâmetro do método
+	public ResponseEntity<CategoryDTO> findById(@PathVariable Long id){ 
 		CategoryDTO dto = service.findById(id);
 		return ResponseEntity.ok().body(dto); 
 	}

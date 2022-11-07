@@ -44,6 +44,21 @@ public class CategoryService {
 		Category entity = obj.orElseThrow( () -> new EntityNotFoundException("Essa Categoria não existe!") );//tenta capturar o obj, caso não exista executa a exceção personalizada criada através da função lambda
 		return new CategoryDTO(entity);
 	}
+
+	
+	@Transactional
+	public CategoryDTO insert(CategoryDTO dto) {
+		
+		Category entity = new Category(); //instancia da entidade que será inserida no BD
+		//o ID será criado automaticamente pelo BD
+		entity.setName(dto.getName()); //atribui os dados recebidos a entidade, nesse caso só o nome
+		
+		//insere no BD através do obj repository
+		entity = repository.save(entity); //na inserção o repositorio retorna um obj com o ID
+		
+		//retorna somente o obj dto instanciado com os dados da entidade
+		return new CategoryDTO(entity);
+	}
 	
 
 	

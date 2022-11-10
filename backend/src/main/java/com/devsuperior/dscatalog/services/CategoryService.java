@@ -7,12 +7,15 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.devsuperior.dscatalog.dto.CategoryDTO;
 import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.repositories.CategoryRepository;
+import com.devsuperior.dscatalog.services.exceptions.DataBaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 
 //informa ao Spring para gerenciar as dependências dessa classe
@@ -73,7 +76,17 @@ public class CategoryService {
 			throw new ResourceNotFoundException("ID "+ id + " not found!");
 		}
 	}
-	
 
+	//não deve usar a anotation transaction por causa das exceções que pode dar
+	public void delete(Long id) {
+		try {
+			repository.deleteById(id);
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException(e.getMessage());
+		}
+		catch (DataIntegrityViolationException e) {
+			throw new DataBaseException("Integrity Violation");
+		}
+	}
 	
 }

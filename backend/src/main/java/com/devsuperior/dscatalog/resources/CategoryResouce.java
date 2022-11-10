@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,10 +51,17 @@ public class CategoryResouce {
 		return ResponseEntity.created(uri).body(dto); 
 	}
 
-	@PutMapping(value = "/{id}") //(ATUALIZAÇÃO)sequencia do endpoint categories com método PUT de requisição (ex: host/categories/1) 
+	@PutMapping(value = "/{id}") //(ATUALIZAR)sequencia do endpoint categories com método/verbo http PUT de requisição (ex: host/categories/1) 
 	public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO dto){ //@path identifica o elemento na url e o @req devolve no corpo da requisição
 		dto = service.update(id, dto);
 		return ResponseEntity.ok().body(dto); 
 	}
+	
+	@DeleteMapping(value = "/{id}") //(DELETAR)sequencia do endpoint categories com método/verbo http DELETE de requisição (ex: host/categories/1) 
+	public ResponseEntity<Void> delete(@PathVariable Long id){ //@path identifica o elemento na url
+		service.delete(id);
+		return ResponseEntity.noContent().build(); //retorna cód 204 = não tem corpo na resposta, mas requisição está ok! 
+	}
+	
 	
 }

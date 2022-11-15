@@ -1,12 +1,16 @@
 package com.devsuperior.dscatalog.entities;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 @Entity
@@ -18,13 +22,43 @@ public class Category implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
+
+	//para Auditoria, grava instante da criação dos dados
+	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE") //Formato UTC GMT (não é GMT-3 por exemplo)
+	private Instant createdAt;
 	
+	//para Auditoria, grava instante da atualização dos dados
+	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE") //no TIME ZONE UNIVERSAL de Greenwich Mean Time (GMT)
+	private Instant updatedAt;
+
 	public Category() {
 	}
 
 	public Category(Long id, String name) {
 		this.id = id;
 		this.name = name;
+	}
+
+	public Instant getCreatedAt() {
+		return createdAt;
+	}
+
+	public Instant getUpdatedAt() {
+		return updatedAt;
+	}
+	
+	//método que atribui o instante atual da criação antes de salvar no banco de dados
+	//executado quando o save create da JPA for executado pela *primeira vez
+	@PrePersist
+	public void prePersist() {
+		createdAt = Instant.now(); //grava instante da criação dos dados na variável
+	}
+	
+	//método que atribui o instante atual da atualização antes de salvar no banco de dados
+	//executado sempre que o save update da JPA for executado 
+	@PreUpdate
+	public void updatedPersist() {
+		updatedAt = Instant.now();//grava instante da atualização dos dados na variável
 	}
 
 	public Long getId() {
@@ -64,5 +98,5 @@ public class Category implements Serializable {
 	public String toString() {
 		return "Category [id=" + id + ", name=" + name + "]";
 	}
-	
+
 }

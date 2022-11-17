@@ -1,14 +1,14 @@
 package com.devsuperior.dscatalog.services;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,18 +28,11 @@ public class CategoryService {
 	
 	//garante a transação com o banco e informa que é somente leitura para não travar o banco(lock)
 	@Transactional(readOnly = true) //obs.: import do Spring e não javax
-	public List<CategoryDTO> findAll(){
-		List<Category> list = repository.findAll(); //busca informações no banco
-		
-		/*forma 1: 
-		  List<CategoryDTO> listDto = new ArrayList<>(); //converte a lista para tipo
-		  DTO for(Category cat : list) { listDto.add(new CategoryDTO(cat)); }
-		 
-		  return listDto; //retorna a lista DTO
-		 */	
+	public Page<CategoryDTO> findAllPaged(PageRequest pageRequest){
+		Page<Category> list = repository.findAll(pageRequest); //busca informações no banco de acordo com o pageRequest
 
-		//forma 2: expressão lambda!
-		return list.stream().map( x -> new CategoryDTO(x)).collect(Collectors.toList());
+		//expressão lambda, onde page já é um tipo stream e não deve fazer a conversão
+		return list.map( x -> new CategoryDTO(x));
 	}
 
 	@Transactional(readOnly = true)

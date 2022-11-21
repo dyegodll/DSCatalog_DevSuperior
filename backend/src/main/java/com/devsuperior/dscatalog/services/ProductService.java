@@ -12,8 +12,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.devsuperior.dscatalog.dto.CategoryDTO;
 import com.devsuperior.dscatalog.dto.ProductDTO;
+import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.entities.Product;
+import com.devsuperior.dscatalog.repositories.CategoryRepository;
 import com.devsuperior.dscatalog.repositories.ProductRepository;
 import com.devsuperior.dscatalog.services.exceptions.DataBaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
@@ -25,6 +28,9 @@ public class ProductService {
 	//o Spring fica responsável por instanciar uma injeção de dependência válida no obj	
 	@Autowired
 	private ProductRepository repository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
 	
 	//garante a transação com o banco e informa que é somente leitura para não travar o banco(lock)
 	@Transactional(readOnly = true) //obs.: import do Spring e não javax
@@ -49,8 +55,7 @@ public class ProductService {
 		
 		Product entity = new Product(); //instancia da entidade que será inserida no BD
 		//o ID será criado automaticamente pelo BD
-//*		entity.setName(dto.getName()); //atribui os dados recebidos a entidade, nesse caso só o nome
-		
+		copyDtoToEntity(dto, entity);
 		//insere no BD através do obj repository
 		entity = repository.save(entity); //na inserção o repositorio retorna um obj com o ID
 		
@@ -62,7 +67,7 @@ public class ProductService {
 	public ProductDTO update(Long id, ProductDTO dto) {
 		try {
 			Product entity = repository.getOne(id);
-//*			entity.setName(dto.getName());
+			copyDtoToEntity(dto, entity);
 			entity = repository.save(entity);
 			return new ProductDTO(entity);
 		} catch (EntityNotFoundException e) {
@@ -79,6 +84,29 @@ public class ProductService {
 		}
 		catch (DataIntegrityViolationException e) {
 			throw new DataBaseException("Integrity Violation"); //tenta deletar obj que outros dependem
+		}
+	}
+	
+	private void copyDtoToEntity(ProductDTO dto, Product entity) {
+
+		//copia dados DTO para Entidade Product
+		entity.setName(dto.getName());
+		entity.setDescription(dto.getDescription());
+		entity.setPrice(dto.getPrice());
+		entity.setImgUrl(dto.getImgUrl());
+		entity.setDate(dto.getDate());
+		
+		//Obs: produto também tem categorias
+		
+		//limpa possíveis categorias existentes na lista
+		entity.getCategories().clear();
+		
+		//percorre cada elemento Category da Lista no DTO
+		for(CategoryDTO catDto : dto.getCategories()) {
+			//instancia entidade categoria pelo JPA
+			Category category = categoryRepository.getOne(catDto.getId()); //sem acessar o BD ainda
+			//adiciona as categorias a entidade 
+			entity.getCategories().add(category);
 		}
 	}
 	

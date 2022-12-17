@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,8 +34,8 @@ public class ProductService {
 	
 	//garante a transação com o banco e informa que é somente leitura para não travar o banco(lock)
 	@Transactional(readOnly = true) //obs.: import do Spring e não javax
-	public Page<ProductDTO> findAllPaged(PageRequest pageRequest){
-		Page<Product> list = repository.findAll(pageRequest); //busca informações no banco de acordo com o pageRequest
+	public Page<ProductDTO> findAllPaged(Pageable pageable){
+		Page<Product> list = repository.findAll(pageable); //busca informações no banco de acordo com o pageRequest
 
 		//expressão lambda, onde page já é um tipo stream e não deve fazer a conversão
 		return list.map( x -> new ProductDTO(x));

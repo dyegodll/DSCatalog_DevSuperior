@@ -55,13 +55,13 @@ public class ProductRepositoryTests {
 	}
 	
 	@Test
-	public void findByIdShouldReturnsOptionalProductNotEmptyWhenIdExistis() {
+	public void findByIdShouldReturnsOptionalProductNonEmptyWhenIdExists() {
 		Optional<Product> result = repository.findById(existingId);
 		Assertions.assertTrue(result.isPresent());
 	}
 	
 	@Test
-	public void findByIdShouldReturnsOptionalProductEmptyWhenIdDoesNotExistis() {
+	public void findByIdShouldReturnsOptionalProductEmptyWhenIdDoesNotExists() {
 		Optional<Product> result = repository.findById(inexistingId);
 		Assertions.assertTrue(result.isEmpty());
 	}

@@ -80,7 +80,7 @@ public class ProductService {
 		try {
 			repository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
-			throw new ResourceNotFoundException(e.getMessage()); 
+			throw new ResourceNotFoundException("ID "+id+" Not Found!"); 
 		}
 		catch (DataIntegrityViolationException e) {
 			throw new DataBaseException("Integrity Violation"); //tenta deletar obj que outros dependem

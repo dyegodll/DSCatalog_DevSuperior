@@ -47,7 +47,8 @@ public class ProductServiceTests {
 	//Fixture
 	@BeforeEach
 	void setup() throws Exception{
-		existingId = 1L; //ArgumentMatchers.any()
+		//valores para representar o comportamento do obj Mockado nos testes
+		existingId = 1L;
 		nonExistingId = 2L;
 		dependentId = 3L;
 		product = ProductFactory.createProduct();
@@ -74,10 +75,27 @@ public class ProductServiceTests {
 	ProductRepository repository;
 	
 	@Test
+	public void findByIdShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
+		Assertions.assertThrows(ResourceNotFoundException.class, ()->{
+			service.findById(nonExistingId);
+		});
+		Mockito.verify(repository).findById(nonExistingId);
+	}
+	
+	@Test
+	public void findByIdShoulReturnsProductDtoWhenIdExist() {
+		ProductDTO dto = service.findById(existingId);
+		Assertions.assertSame(ProductDTO.class, dto.getClass());
+		
+		Mockito.verify(repository).findById(existingId);
+	}
+	
+	@Test
 	public void findAllPagedShouldReturnsPage() {
 		Pageable pageable = PageRequest.of(0, 10);
 		Page<ProductDTO> result = service.findAllPaged(pageable);
 		Assertions.assertNotNull(result);
+		
 		Mockito.verify(repository).findAll(pageable);
 	}
 	
@@ -104,6 +122,7 @@ public class ProductServiceTests {
 		Assertions.assertThrows(ResourceNotFoundException.class, ()->{
 			service.delete(nonExistingId);
 		});
+		
 		verify(repository).deleteById(nonExistingId);
 	}
 	

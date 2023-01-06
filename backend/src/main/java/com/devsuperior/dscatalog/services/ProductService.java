@@ -45,7 +45,7 @@ public class ProductService {
 	public ProductDTO findById(Long id) {
 		Optional<Product> obj = repository.findById(id); //classe Optional<E> retorna objetos diferente de nulos
 		//Product entity = obj.get(); //captura objeto do Optional
-		Product entity = obj.orElseThrow( () -> new ResourceNotFoundException("Essa Categoria não existe!") );//tenta capturar o obj, caso não exista executa a exceção personalizada criada através da função lambda
+		Product entity = obj.orElseThrow( () -> new ResourceNotFoundException("Esse Produto não existe!") );//tenta capturar o obj, caso não exista executa a exceção personalizada criada através da função lambda
 		return new ProductDTO(entity, entity.getCategories());
 	}
 
@@ -96,7 +96,7 @@ public class ProductService {
 		entity.setImgUrl(dto.getImgUrl());
 		entity.setDate(dto.getDate());
 		
-		//Obs: produto também tem categorias
+		//Obs: produto pode ter mais de uma categoria
 		
 		//limpa possíveis categorias existentes na lista
 		entity.getCategories().clear();
@@ -105,7 +105,7 @@ public class ProductService {
 		for(CategoryDTO catDto : dto.getCategories()) {
 			//instancia entidade categoria pelo JPA
 			Category category = categoryRepository.getOne(catDto.getId()); //sem acessar o BD ainda
-			//adiciona as categorias a entidade 
+			//adiciona a categoria existente a entidade 
 			entity.getCategories().add(category);
 		}
 	}

@@ -21,7 +21,7 @@ import com.devsuperior.dscatalog.services.ProductService;
 
 @RestController
 @RequestMapping(value = "/products")
-public class ProductResouce {
+public class ProductResource {
 	
 	@Autowired
 	private ProductService service;

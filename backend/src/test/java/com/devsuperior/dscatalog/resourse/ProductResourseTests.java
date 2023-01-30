@@ -117,7 +117,7 @@ public class ProductResourseTests {
 	@Test
 	public void updateShouldReturnProductDtoWhenIdExists() throws Exception{
 		
-		//converte obj productDTO em texto (para ser enviado no formato JSON)
+		//objectmapper converte o obj productDTO em texto para ser enviado no formato JSON
 		String jasonBody = objectmapper.writeValueAsString(productDTO);
 		
 		ResultActions result = mockMvc.perform(put("/products/{id}", existingId)

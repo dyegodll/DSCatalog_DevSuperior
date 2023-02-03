@@ -1,12 +1,12 @@
 package com.devsuperior.dscatalog.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+//import org.springframework.stereotype.Repository;
 
 import com.devsuperior.dscatalog.entities.Category;
 
 //informa ao Spring para gerenciar as dependências dessa classe
-@Repository
+//@Repository não é mais necessário
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 	//camada de acesso ao BD
 	//Já funciona, pois está herdando da Classe já Implementada JpaRepository<T, ID>

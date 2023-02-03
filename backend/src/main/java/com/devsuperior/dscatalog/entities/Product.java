@@ -36,15 +36,17 @@ public class Product implements Serializable {
 	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
 	private Instant date;
 
-	@ManyToMany									//muitos produos pra muitas categorias
+
+	@ManyToMany					//muitos produtos podem ter muitas categorias
 	@JoinTable( 
 			name="tb_product_category",		//tabela da associação (nova tabela no banco)
 			//chaves estrangeiras das 2 tabelas
-			joinColumns = @JoinColumn(name = "product_id"), //referencía a própria classe
-			inverseJoinColumns = @JoinColumn(name = "category_id") //referencía a classe associada (*a da coleção)
+			joinColumns = @JoinColumn(name = "product_id"), //referência a própria classe
+			inverseJoinColumns = @JoinColumn(name = "category_id") //faz referência a classe associada (*a da coleção)
 			)
 	private Set<Category> categories = new HashSet<>();
 
+	
 	public Product() {
 	}
 

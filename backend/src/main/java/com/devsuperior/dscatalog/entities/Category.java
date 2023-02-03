@@ -2,13 +2,16 @@ package com.devsuperior.dscatalog.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -31,6 +34,10 @@ public class Category implements Serializable {
 	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE") //no TIME ZONE UNIVERSAL de Greenwich Mean Time (GMT)
 	private Instant updatedAt;
 
+	//complemento do mapeamento da relação entre as tabelas
+	@ManyToMany(mappedBy = "categories") //permite que a JPA acesse os produtos que estão vinculados as categorias
+	private Set<Product> products = new HashSet<>();
+	
 	public Category() {
 	}
 
@@ -59,6 +66,10 @@ public class Category implements Serializable {
 	@PreUpdate
 	public void updatedPersist() {
 		updatedAt = Instant.now();//grava instante da atualização dos dados na variável
+	}
+	
+	public Set<Product> getProducts() {
+		return products;
 	}
 
 	public Long getId() {

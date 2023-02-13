@@ -44,7 +44,11 @@ public class ProductDTO implements Serializable {
 	
 	//construtor que popula a lista de categorias, que pode ter um ou mais
 	public ProductDTO(Product entity, Set<Category> categories) {
-		this(entity);
+		this(entity); //chama o construtor que tem só a entitade como argumento
+		//acessa a lista categories que veio no argumento
+		//para cada elemento da lista (cat)
+		//acessa o atributo(classe) lista categories e adiciona o elemento 
+		//instanciando o CategoryDTO(Category entity)
 		categories.forEach(cat -> this.categories.add( new CategoryDTO(cat) ) );
 	}
 

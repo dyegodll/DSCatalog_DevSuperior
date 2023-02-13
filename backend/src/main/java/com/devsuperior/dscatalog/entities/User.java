@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,12 +29,13 @@ public class User implements Serializable {
 	private String email;
 	private String password;
 	
-	@ManyToMany					//muitos usuários podem ter muitos perfis
+	//muitos usuários podem ter muitos perfis
+	@ManyToMany(fetch = FetchType.EAGER) 	//forsa a criação da lista dos perfis com base nos dados do BD ao instaciar o User					
 	@JoinTable( 
 			name="tb_user_role",		//tabela da associação (nova tabela no banco)
 			//chaves estrangeiras das 2 tabelas
 			joinColumns = @JoinColumn(name = "user_id"), //referência a própria classe
-			inverseJoinColumns = @JoinColumn(name = "role_id") //faz referência a classe associada (*a da coleção)
+			inverseJoinColumns = @JoinColumn(name = "role_id") //faz referência a classe associada (componente/dependente)
 			)
 	private Set<Role> roles = new HashSet<>();
 	

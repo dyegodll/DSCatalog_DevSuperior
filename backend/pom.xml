@@ -62,14 +62,11 @@
 			</exclusions>
 		</dependency>
 
-		<!-- desnecessário no momento
-		
+		<!-- criptografa as senhas -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-		
-		-->
 
 	</dependencies>
 

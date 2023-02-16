@@ -14,8 +14,8 @@ public class AppConfig implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	//componente do Spring
-	// criptografa as senhas
-	@Bean //anotation de método
+		// criptografa as senhas
+	@Bean 	//anotation de método
 	public BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}

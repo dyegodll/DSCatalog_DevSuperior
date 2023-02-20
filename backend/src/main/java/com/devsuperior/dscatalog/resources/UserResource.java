@@ -2,6 +2,8 @@
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,7 +47,7 @@ public class UserResource {
 	}
 	
 	@PostMapping //anotation para inserir os dados, obs: usa o endpoint principal ("/categories") mas através do método POST 
-	public ResponseEntity<UserDTO> insert(@RequestBody UserInsertDTO dto){ 
+	public ResponseEntity<UserDTO> insert(@Valid @RequestBody UserInsertDTO dto){ //@Valid força a validação dos campos obrigatórios
 		UserDTO newDto = service.insert(dto); //na inserção o repositorio retorna um obj com o ID
 		
 		//quando se trata de inserir, convém mostrar o caminho da localização do obj
@@ -57,7 +59,7 @@ public class UserResource {
 	}
 
 	@PutMapping(value = "/{id}") //(ATUALIZAR)sequencia do endpoint categories com método/verbo http PUT de requisição (ex: host/categories/1) 
-	public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody UserDTO dto){ //@path identifica o elemento na url e o @req devolve no corpo da requisição
+	public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserDTO dto){ //@path identifica o elemento na url e o @req devolve no corpo da requisição
 		dto = service.update(id, dto);
 		return ResponseEntity.ok().body(dto); 
 	}

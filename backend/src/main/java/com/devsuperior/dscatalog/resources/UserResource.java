@@ -20,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.devsuperior.dscatalog.dto.UserDTO;
 import com.devsuperior.dscatalog.dto.UserInsertDTO;
+import com.devsuperior.dscatalog.dto.UserUpdateDTO;
 import com.devsuperior.dscatalog.services.UserService;
 
 @RestController
@@ -59,9 +60,9 @@ public class UserResource {
 	}
 
 	@PutMapping(value = "/{id}") //(ATUALIZAR)sequencia do endpoint categories com método/verbo http PUT de requisição (ex: host/categories/1) 
-	public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserDTO dto){ //@path identifica o elemento na url e o @req devolve no corpo da requisição
-		dto = service.update(id, dto);
-		return ResponseEntity.ok().body(dto); 
+	public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO dto){ //@path identifica o elemento na url e o @req devolve no corpo da requisição
+		UserDTO newDto = service.update(id, dto);
+		return ResponseEntity.ok().body(newDto); 
 	}
 	
 	@DeleteMapping(value = "/{id}") //(DELETAR)sequencia do endpoint categories com método/verbo http DELETE de requisição (ex: host/categories/1) 

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+//classe que implementa a lista dos erros de validação
 public class ValidationError extends StandardError implements Serializable {
 	private static final long serialVersionUID = 1L;
 

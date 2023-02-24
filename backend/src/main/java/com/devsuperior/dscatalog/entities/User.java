@@ -30,6 +30,7 @@ public class User implements Serializable {
 	
 	@Column(unique = true)
 	private String email;
+	
 	private String password;
 	
 	//muitos usuários podem ter muitos perfis

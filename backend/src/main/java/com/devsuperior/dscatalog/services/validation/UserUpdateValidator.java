@@ -14,16 +14,16 @@ import com.devsuperior.dscatalog.repositories.UserRepository;
 import com.devsuperior.dscatalog.resources.exceptions.FieldMessage;
 
 //boilerplate
-//implementa a lógica da validação da anotation (UserInsertValid)
+//implementa a lógica da validação da anotation (UserUpdateValid)
 //parâmetrização genérics ConstraintValidator< (tipo da anotation customizada) , (tipo da classe que vai receber a anotation) > {
 //faz validação de inserção de novo usuário
-public class UserInsertValidator implements ConstraintValidator<UserInsertValid, UserInsertDTO> {
+public class UserUpdateValidator implements ConstraintValidator<UserUpdateValid, UserInsertDTO> {
 	
 	@Autowired
 	private UserRepository repository;
 	
 	@Override
-	public void initialize(UserInsertValid ann) {
+	public void initialize(UserUpdateValid ann) {
 		//lógica ao inicializar o obj
 	}
 

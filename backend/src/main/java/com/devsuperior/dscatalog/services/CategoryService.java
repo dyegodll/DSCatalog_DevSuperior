@@ -39,7 +39,7 @@ public class CategoryService {
 	public CategoryDTO findById(Long id) {
 		Optional<Category> obj = repository.findById(id); //classe Optional<E> retorna objetos diferente de nulos
 		//Category entity = obj.get(); //captura objeto do Optional
-		Category entity = obj.orElseThrow( () -> new ResourceNotFoundException("Essa Categoria não existe!") );//tenta capturar o obj, caso não exista executa a exceção personalizada criada através da função lambda
+		Category entity = obj.orElseThrow( () -> new ResourceNotFoundException("Ops! Categoria não cadastrada") );//tenta capturar o obj, caso não exista executa a exceção personalizada criada através da função lambda
 		return new CategoryDTO(entity);
 	}
 

@@ -45,7 +45,7 @@ public class ProductService {
 	public ProductDTO findById(Long id) {
 		Optional<Product> obj = repository.findById(id); //classe Optional<E> retorna objetos diferente de nulos
 		//Product entity = obj.get(); //captura objeto do Optional
-		Product entity = obj.orElseThrow( () -> new ResourceNotFoundException("Esse Produto não existe!") );//tenta capturar o obj, caso não exista executa a exceção personalizada criada através da função lambda
+		Product entity = obj.orElseThrow( () -> new ResourceNotFoundException("Ops! Produto não cadastrado") );//tenta capturar o obj, caso não exista executa a exceção personalizada criada através da função lambda
 		return new ProductDTO(entity, entity.getCategories());
 	}
 

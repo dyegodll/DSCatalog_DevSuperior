@@ -51,7 +51,7 @@ public class UserService {
 	public UserDTO findById(Long id) {
 		Optional<User> obj = repository.findById(id); //classe Optional<E> retorna objetos diferente de nulos
 		//User entity = obj.get(); //captura objeto do Optional
-		User entity = obj.orElseThrow( () -> new ResourceNotFoundException("Esse Produto não existe!") );//tenta capturar o obj, caso não exista executa a exceção personalizada criada através da função lambda
+		User entity = obj.orElseThrow( () -> new ResourceNotFoundException("Ops! Usuário não cadastrado") );//tenta capturar o obj, caso não exista executa a exceção personalizada criada através da função lambda
 		return new UserDTO(entity);
 	}
 

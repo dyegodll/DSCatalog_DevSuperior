@@ -2,11 +2,12 @@ package com.devsuperior.dscatalog.resources.exceptions;
 
 import java.io.Serializable;
 
+//para os erros de validação
 public class FieldMessage implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String fieldName;
-	private String message;
+	private String fieldName; //nome do campo
+	private String message; // mensagem de erro do campo
 
 	public FieldMessage() {
 	}

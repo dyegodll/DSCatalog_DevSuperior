@@ -55,8 +55,9 @@ public class ResourcesExceptionsHandler {
 		err.setMessage(e.getMessage());
 		err.setPath(request.getRequestURI());
 		
-		// e.getBindingResult() captura os erros da validação
-			// .getFieldErrors(); converte os erros em lista
+		//erros de validação dentro da MethodArgumentNotValidException
+		// e.getBindingResult() //captura os erros da validação
+			// .getFieldErrors(); //converte os erros em lista, para poder capturar o campo e a msg
 		
 		//para cada FieldError dentro da exceção, capture e adicione a lista
 		for (FieldError f : e.getBindingResult().getFieldErrors()) {

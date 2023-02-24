@@ -12,4 +12,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	//Já funciona, pois está herdando da Classe já Implementada JpaRepository<T, ID>
 	//T = tipo/nome da classe JPA (@Entity)
 	//ID = tipo do id definido na classe (nesse caso Long)
+	
+	//busca usuário por email
+	//crialção padrão camelCase
+	User findByEmail(String email);
 }

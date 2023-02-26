@@ -1,14 +1,20 @@
 package com.devsuperior.dscatalog.services;
 
+import java.io.Serializable;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,10 +30,16 @@ import com.devsuperior.dscatalog.repositories.UserRepository;
 import com.devsuperior.dscatalog.services.exceptions.DataBaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 
+//UserDetailsService = Spring Cloud OAuth
+
 //informa ao Spring para gerenciar as dependências dessa classe
 @Service
-public class UserService {
+public class UserService implements UserDetailsService, Serializable {
+	private static final long serialVersionUID = 1L;
 
+	//imprime msg no console (informação/erro/warn)
+	private static Logger logger = LoggerFactory.getLogger(UserService.class); //classe que vai funcionar
+	
 	//o Spring fica responsável por instanciar uma injeção de dependência válida no obj	
 	@Autowired
 	private UserRepository repository;
@@ -108,6 +120,23 @@ public class UserService {
 			//adiciona o role existente na lista 
 			entity.getRoles().add(role);
 		}
+	}
+	
+	//retorna user que já implementa a UserDetails
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+		User user = repository.findByEmail(username);
+		
+		//caso usuário não seja encontrado pelo email
+		if(user == null) {
+			//lança exceção
+			logger.error("User Not Found: "+username);
+			throw new UsernameNotFoundException("Email Not Found!");
+		}
+		//caso sim
+		logger.info("User Found: "+username);
+		return user;
 	}
 	
 }

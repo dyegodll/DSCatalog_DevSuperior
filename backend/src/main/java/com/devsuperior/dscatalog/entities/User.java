@@ -126,6 +126,7 @@ public class User implements UserDetails, Serializable {
 	//lista de papéis/perfís atribuídos ao usuário
 	//SimpleGrantedAuthority classe concreta da interface GrantedAuthority
 	//converte tipo Role em GrantedAuthority a partir da lista roles
+	//para enviar os dados para o AuthorizationServer do JWT(Jason Web Token) através do Spring Security
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return roles.stream().map(role -> new SimpleGrantedAuthority(role.getAuthority())).collect(Collectors.toList());

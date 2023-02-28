@@ -123,6 +123,7 @@ public class UserService implements UserDetailsService, Serializable {
 	}
 	
 	//retorna user que já implementa a UserDetails
+	//para enviar os dados para o AuthorizationServer do JWT(Jason Web Token) através do Spring Security
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 

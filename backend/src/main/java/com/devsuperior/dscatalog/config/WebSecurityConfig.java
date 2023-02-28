@@ -1,7 +1,9 @@
 package com.devsuperior.dscatalog.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -31,9 +33,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 	
 	//configura acesso aos Endpoints
-	//ignora a segurança de todos os Endpoints mas passa pela biblioteca do OAuth para autenticação
+	//ignora a segurança de todos os Endpoints mas passa pela biblioteca do JWT para autenticação
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/actuator/**"); 
+	}
+	
+	@Override
+	@Bean //transforma o AuthenticationManager em componente do sistema
+	protected AuthenticationManager authenticationManager() throws Exception {
+		// necessário para o AuthorizationServer
+		return super.authenticationManager();
 	}
 }

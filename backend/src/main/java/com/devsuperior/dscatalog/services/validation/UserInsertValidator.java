@@ -52,7 +52,7 @@ public class UserInsertValidator implements ConstraintValidator<UserInsertValid,
 		}
 		
 		
-		//insere os erros (FieldMessage) na lista do Bean Validation(ex.: MethodArgumentNotValidException) do contexto
+		//captura os erros(FieldMessage) da lista e insere na lista do contexto do Bean Validation(MethodArgumentNotValidException) para ser manipulado pelo Handler
 		for (FieldMessage e : list) {
 			context.disableDefaultConstraintViolation();
 			context.buildConstraintViolationWithTemplate(e.getMessage()).addPropertyNode(e.getFieldName())

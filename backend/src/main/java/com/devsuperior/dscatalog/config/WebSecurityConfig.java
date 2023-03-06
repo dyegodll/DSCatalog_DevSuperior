@@ -11,15 +11,20 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-//Configuração provisória para liberar todos endpoints
+//Spring Security para configurações de autenticação e autorização!
+
+/* Mesmo utilizando o OAuth ou o JWT, é necessario utilizar a infraestrutura básica do Spring Security
+   para ter acesso ao banco de dados e ao usuário para conferir as credenciais para geração do token */
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+	//Bean de classe externa, no AppConfig
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	
+	//implementado no UserService
 	@Autowired
 	private UserDetailsService userDetailsService;
 	
@@ -28,12 +33,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		//informa ao Spring Security na hora de fazer autenticação
-		//como buscar o usuário(por email) e como analisar a senha criptografada(BCrypt)
+		//como buscar o usuário por email e como analisar a senha criptografada(BCrypt)
 		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
 	}
 	
-	//configura acesso aos Endpoints
-	//ignora a segurança de todos os Endpoints mas passa pela biblioteca do JWT para autenticação
+	//configura acesso aos Endpoints a passar pela biblioteca do actuator do Spring Cloud OAuth 2 para autenticação
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/actuator/**"); 

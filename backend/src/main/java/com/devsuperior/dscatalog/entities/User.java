@@ -22,7 +22,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-//UserDetails = Spring Cloud OAuth
+/* Mesmo utilizando o OAuth ou o JWT, é necessario utilizar a infraestrutura básica do Spring Security
+para ter acesso ao banco de dados e ao usuário para conferir as credenciais para geração do token */
 
 @Entity
 @Table(name = "tb_user")
@@ -124,12 +125,12 @@ public class User implements UserDetails, Serializable {
 	}
 
 	//lista de papéis/perfís atribuídos ao usuário
-	//SimpleGrantedAuthority classe concreta da interface GrantedAuthority
 	//converte tipo Role em GrantedAuthority a partir da lista roles
 	//para enviar os dados para o AuthorizationServer do JWT(Jason Web Token) através do Spring Security
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return roles.stream().map(role -> new SimpleGrantedAuthority(role.getAuthority())).collect(Collectors.toList());
+		//SimpleGrantedAuthority classe concreta da interface GrantedAuthority
 	}
 
 	//nome de credecial do usuário = email

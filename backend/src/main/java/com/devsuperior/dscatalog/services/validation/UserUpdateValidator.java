@@ -64,7 +64,7 @@ public class UserUpdateValidator implements ConstraintValidator<UserUpdateValid,
 		if(user != null && userId != user.getId()) {
 			//então usuário com email já existe
 			// só pode atualizar email do mesmo usuário
-			list.add(new FieldMessage("email", "Ops! Email já cadastrado!"));
+			list.add(new FieldMessage("email", "Ops! Email de um Usuário já cadastrado!"));
 		}
 		
 		//insere os erros (FieldMessage) na lista do Bean Validation(ex.: MethodArgumentNotValidException) do contexto

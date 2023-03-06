@@ -30,9 +30,9 @@ import com.devsuperior.dscatalog.repositories.UserRepository;
 import com.devsuperior.dscatalog.services.exceptions.DataBaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 
-//UserDetailsService = Spring Cloud OAuth
+/* Mesmo utilizando o OAuth ou o JWT, é necessario utilizar a infraestrutura básica do Spring Security
+para ter acesso ao banco de dados e ao usuário para conferir as credenciais para geração do token */
 
-//informa ao Spring para gerenciar as dependências dessa classe
 @Service
 public class UserService implements UserDetailsService, Serializable {
 	private static final long serialVersionUID = 1L;
@@ -122,21 +122,21 @@ public class UserService implements UserDetailsService, Serializable {
 		}
 	}
 	
-	//retorna user que já implementa a UserDetails
+	//retorna UserDetails, que na verdade é o User que implementa essa interface
 	//para enviar os dados para o AuthorizationServer do JWT(Jason Web Token) através do Spring Security
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-		User user = repository.findByEmail(username);
+		User user = repository.findByEmail(username); //username = email
 		
 		//caso usuário não seja encontrado pelo email
 		if(user == null) {
 			//lança exceção
-			logger.error("User Not Found: "+username);
+			logger.error("User Not Found: "+username); //imprime msg no console
 			throw new UsernameNotFoundException("Email Not Found!");
 		}
 		//caso sim
-		logger.info("User Found: "+username);
+		logger.info("User Found: "+username); //imprime msg no console
 		return user;
 	}
 	

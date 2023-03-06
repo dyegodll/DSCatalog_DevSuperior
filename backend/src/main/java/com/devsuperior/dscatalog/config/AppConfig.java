@@ -16,7 +16,7 @@ public class AppConfig implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	//componente do Spring
-		// criptografa as senhas
+		//classe externa que criptografa as senhas
 	@Bean 	//anotation de método
 	public BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -26,7 +26,7 @@ public class AppConfig implements Serializable {
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter tokenConverter = new JwtAccessTokenConverter(); //instancia obj
-		tokenConverter.setSigningKey("MY-JWT-SECRET"); //registra a chave do token
+		tokenConverter.setSigningKey("MY-JWT-SECRET"); //registra a chave do token, que só o sistema conhece
 		return tokenConverter; //retorna
 	}
 
@@ -37,4 +37,9 @@ public class AppConfig implements Serializable {
 		return new JwtTokenStore(accessTokenConverter()); 
 	}
 	
+	//OBS-1.: Quanto menor for o tempo de expiração do token, mais seguro ele é!
+	
+	/*OBS-2.: Se o Authorization Server estiver numa aplicação diferente da aplicação do 
+	 Resource Server então os dois devem conhecer o segredo(assinatura) do token(JWT).
+	 Por que o Resource verifica se o token gerado pelo Authorization é valido*/ 
 }

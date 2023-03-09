@@ -15,27 +15,28 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 public class AppConfig implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	//componente do Spring
-		//classe externa que criptografa as senhas
-	@Bean 	//anotation de método
-	public BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-	
-	//Objetos capazes de acessar os Tokens JWT (ler, decodificar, criar um token decodificando ele)
-	@Bean
-	public JwtAccessTokenConverter accessTokenConverter() {
-		JwtAccessTokenConverter tokenConverter = new JwtAccessTokenConverter(); //instancia obj
-		tokenConverter.setSigningKey("MY-JWT-SECRET"); //registra a chave do token, que só o sistema conhece
-		return tokenConverter; //retorna
-	}
+    //componente do Spring
+        //classe externa que criptografa as senhas
+    //anotation de método
+    @Bean
+    BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-	//Objetos capazes de acessar os Tokens JWT (ler, decodificar, criar um token decodificando ele)
-	@Bean
-	public JwtTokenStore tokenStore() {
-		//instancia obj JWT passando como argumento o Bean accessTokenConverter com a chave do token
-		return new JwtTokenStore(accessTokenConverter()); 
-	}
+    //Objetos capazes de acessar os Tokens JWT (ler, decodificar, criar um token decodificando ele)
+    @Bean
+    JwtAccessTokenConverter accessTokenConverter() {
+        JwtAccessTokenConverter tokenConverter = new JwtAccessTokenConverter(); //instancia obj
+        tokenConverter.setSigningKey("MY-JWT-SECRET"); //registra a chave do token, que só o sistema conhece
+        return tokenConverter; //retorna
+    }
+
+    //Objetos capazes de acessar os Tokens JWT (ler, decodificar, criar um token decodificando ele)
+    @Bean
+    JwtTokenStore tokenStore() {
+        //instancia obj JWT passando como argumento o Bean accessTokenConverter com a chave do token
+        return new JwtTokenStore(accessTokenConverter());
+    }
 	
 	//OBS-1.: Quanto menor for o tempo de expiração do token, mais seguro ele é!
 	

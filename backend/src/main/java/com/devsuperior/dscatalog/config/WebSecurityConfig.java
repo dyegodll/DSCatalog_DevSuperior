@@ -40,6 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	//configura acesso aos Endpoints a passar pela biblioteca do actuator do Spring Cloud OAuth 2 para autenticação
 	@Override
 	public void configure(WebSecurity web) throws Exception {
+		//força todos os acessos a recursos a passarem pela  tela de login(autenticação)
 		web.ignoring().antMatchers("/actuator/**"); 
 	}
 	

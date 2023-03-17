@@ -1,6 +1,7 @@
 package com.devsuperior.dscatalog.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,6 +16,15 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @Configuration // informa que a classe é de configuração
 @EnableAuthorizationServer // informa que a classe representa o AuthorizationServer do JWT
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+	
+	@Value("${security.oauth2.client.client-id}")
+	private String clientId;
+	
+	@Value("${security.oauth2.client.client-secret}")
+	private String clienSecret;
+	
+	@Value("${jwt.duration}")
+	private Integer jwtDuration;
 	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -38,11 +48,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory() //define processo em memória
-		.withClient("dscatalog") //define o id/nome do app que será usado pela aplicação web(LOGIN da APLICAÇÃO no Servidor) para acessar o backend | OBS.: NÃO LOGIN DO USUÁRIO
-		.secret(passwordEncoder.encode("dscatalog123")) //senha de acesso a APLICAÇÃO já CRIPTOGRAFADA | OBS.: NÃO SENHA DO USUÁRIO
+		.withClient(clientId) //define o id/nome do app que será usado pela aplicação web(LOGIN da APLICAÇÃO no Servidor) para acessar o backend | OBS.: NÃO LOGIN DO USUÁRIO
+		.secret(passwordEncoder.encode(clienSecret)) //senha de acesso a APLICAÇÃO já CRIPTOGRAFADA | OBS.: NÃO SENHA DO USUÁRIO
 		.scopes("read", "write") //acesso de leitura e escrita
 		.authorizedGrantTypes("password") //tipo de acesso/login
-		.accessTokenValiditySeconds(86400); //tempo de validação do token em segundos (nesse caso 24h)
+		.accessTokenValiditySeconds(jwtDuration); //tempo de validação do token em segundos (nesse caso 24h)
 	}
 
 	//define quem vai autorizar e qual vai ser o formato do token (JWT)

@@ -2,6 +2,7 @@ package com.devsuperior.dscatalog.config;
 
 import java.io.Serializable;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,20 +16,26 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 public class AppConfig implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	//acessa variável de ambiente spring em application.properties
+	//JWT_SECRET = jwtSecret (padrão camelCase)
+	//jwt.secret=${JWT_SECRET:MY-JWT-SECRET}, caso o valor não tenha sido defido na variável
+	//use a Coalescência ( : ) para definir o valor padrão ("MY-JWT-SECRET")
+	@Value("${jwt.secret}")//nome da chave
+	private String jwtSecret;
+	
     //componente do Spring
-        //classe externa que criptografa as senhas
-    //anotation de método
     @Bean
     BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    	//classe externa que criptografa as senhas
+    	return new BCryptPasswordEncoder();
     }
 
     //Objetos capazes de acessar os Tokens JWT (ler, decodificar, criar um token decodificando ele)
     @Bean
     JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter tokenConverter = new JwtAccessTokenConverter(); //instancia obj
-        tokenConverter.setSigningKey("MY-JWT-SECRET"); //registra a chave do token, que só o sistema conhece
-        return tokenConverter; //retorna
+        tokenConverter.setSigningKey(jwtSecret); //registra a chave do token, que só o sistema conhece
+        return tokenConverter;
     }
 
     //Objetos capazes de acessar os Tokens JWT (ler, decodificar, criar um token decodificando ele)

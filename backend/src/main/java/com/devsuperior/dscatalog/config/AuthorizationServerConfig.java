@@ -1,5 +1,7 @@
 package com.devsuperior.dscatalog.config;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -10,8 +12,11 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+
+import com.devsuperior.dscatalog.components.JwtTokenEnhancer;
 
 @Configuration // informa que a classe é de configuração
 @EnableAuthorizationServer // informa que a classe representa o AuthorizationServer do JWT
@@ -29,6 +34,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	
+	//usado para inserir informações adicionais no token
+	@Autowired
+	private JwtTokenEnhancer tokenEnhancer;
+	
+	//tbm usado para inserir informações adicionais no token
 	@Autowired
 	private JwtAccessTokenConverter accessTokenConverter;
 	
@@ -58,9 +68,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	//define quem vai autorizar e qual vai ser o formato do token (JWT)
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+		
+		//configura o aprimorador do token(TokenEnhancer) para adicionar informações a ele
+		TokenEnhancerChain chain = new TokenEnhancerChain();
+		chain.setTokenEnhancers(Arrays.asList(tokenEnhancer,accessTokenConverter)); //exige uma lista com o TokenEnhancer + JwtAccessTokenConverter
+		
 		endpoints.authenticationManager(authenticationManager) //define o AuthenticationManager que processará a autenticação
 		.tokenStore(tokenStore) //processa o token
-		.accessTokenConverter(accessTokenConverter);
+		.accessTokenConverter(accessTokenConverter)
+		.tokenEnhancer(chain); //define o TokenEnhancer
 	}
 
 }

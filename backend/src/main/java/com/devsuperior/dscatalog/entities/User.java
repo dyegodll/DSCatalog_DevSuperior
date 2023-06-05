@@ -43,7 +43,7 @@ public class User implements UserDetails, Serializable {
 	private String password;
 	
 	//muitos usuários podem ter muitos perfis
-	@ManyToMany(fetch = FetchType.EAGER) 	//forsa a criação da lista dos perfis com base nos dados do BD ao instaciar o User					
+	@ManyToMany(fetch = FetchType.EAGER) 	//força a criação da lista dos perfis com base nos dados do BD ao instaciar o User					
 	@JoinTable( 
 			name="tb_user_role",		//tabela da associação (nova tabela no banco)
 			//chaves estrangeiras das 2 tabelas

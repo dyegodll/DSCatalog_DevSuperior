@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
@@ -52,12 +53,13 @@ public class ProductDTO implements Serializable {
 	}
 
 	public ProductDTO(Product entity) {
-		this.id = entity.getId();
-		this.name = entity.getName();
-		this.description = entity.getDescription();
-		this.price = entity.getPrice();
-		this.imgUrl = entity.getImgUrl();
-		this.date = entity.getDate();
+		id = entity.getId();
+		name = entity.getName();
+		description = entity.getDescription();
+		price = entity.getPrice();
+		imgUrl = entity.getImgUrl();
+		date = entity.getDate();
+		categories = entity.getCategories().stream().map( x -> new CategoryDTO(x)).collect(Collectors.toList());
 	}
 	
 	//construtor que popula a lista de categorias, que pode ter um ou mais

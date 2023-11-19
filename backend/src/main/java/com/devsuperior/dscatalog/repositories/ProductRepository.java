@@ -15,9 +15,10 @@ import com.devsuperior.dscatalog.entities.Product;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	//JPQL
-	@Query("SELECT obj FROM Product obj "
+	@Query("SELECT DISTINCT obj FROM Product obj "
 			+ "INNER JOIN obj.categories cats "
-			+ "WHERE :categories IN cats")
+			+ "WHERE "
+			+ "(:categories IS NULL OR :categories IN cats)")
 	Page<Product> findAllPagedCategory(List<Category> categories, Pageable pageable);
 
 	//camada de acesso ao BD

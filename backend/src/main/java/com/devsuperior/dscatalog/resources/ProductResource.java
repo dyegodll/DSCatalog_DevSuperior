@@ -33,11 +33,10 @@ public class ProductResource {
 	@GetMapping // anotation para recuperar os dados
 	public ResponseEntity<Page<ProductDTO>> findAllPagedCategory(
 			@RequestParam(value = "categoryId", defaultValue = "0") Long categoryId,
-	//		@RequestParam(value = "name", defaultValue = "") String name, 
+			@RequestParam(value = "name", defaultValue = "") String name, 
 			Pageable pageable) {
 	
-	//	Page<ProductDTO> list = service.findAllPagedCategory(categoryId, name.trim(), pageable);
-		Page<ProductDTO> list = service.findAllPagedCategory(categoryId, pageable);
+		Page<ProductDTO> list = service.findAllPagedCategory(categoryId, name.trim(), pageable);
 		
 		return ResponseEntity.ok().body(list);
 	}
@@ -48,8 +47,7 @@ public class ProductResource {
 	  public ResponseEntity<Page<ProductDTO>> findAllPaged(Pageable pageable) {
 	  
 	  // Classe Pageable do Spring Data Domain configura os Parâmetros(page,size,sort) automaticamente
-		Page<ProductDTO> list =
-		service.findAllPaged(pageable);
+		Page<ProductDTO> list = service.findAllPaged(pageable);
 	  
 	  // o ResponseEntity é uma classe que convert a resposta para HTTP 
 		return ResponseEntity.ok().body(list); // passa a lista como resposta 

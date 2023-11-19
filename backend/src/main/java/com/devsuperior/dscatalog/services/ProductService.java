@@ -36,9 +36,9 @@ public class ProductService {
 	
 	//com filtro categoryId
 	@Transactional(readOnly = true)
-	public Page<ProductDTO> findAllPagedCategory(Long categoryId, Pageable pageable) {
+	public Page<ProductDTO> findAllPagedCategory(Long categoryId, String name,Pageable pageable) {
 		List<Category> categories = (categoryId == 0) ? null : Arrays.asList(categoryRepository.getReferenceById(categoryId));
-		Page<Product> list = repository.findAllPagedCategory(categories, pageable);
+		Page<Product> list = repository.findAllPagedCategory(categories, name, pageable);
 		return list.map(x -> new ProductDTO(x));
 	}
 	

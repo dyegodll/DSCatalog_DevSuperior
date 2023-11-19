@@ -31,12 +31,12 @@ public class ProductResource {
 
 	// EndPoint de CONSULTA Paginada PERSONALIZADA
 	@GetMapping // anotation para recuperar os dados
-	public ResponseEntity<Page<ProductDTO>> findAllPagedCategory(
+	public ResponseEntity<Page<ProductDTO>> findAllPagedCategoryName(
 			@RequestParam(value = "categoryId", defaultValue = "0") Long categoryId,
 			@RequestParam(value = "name", defaultValue = "") String name, 
 			Pageable pageable) {
 	
-		Page<ProductDTO> list = service.findAllPagedCategory(categoryId, name.trim(), pageable);
+		Page<ProductDTO> list = service.findAllPagedCategoryName(categoryId, name.trim(), pageable);
 		
 		return ResponseEntity.ok().body(list);
 	}

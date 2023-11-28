@@ -18,13 +18,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	@Query("SELECT DISTINCT obj FROM Product obj "
 			+ "INNER JOIN obj.categories cats "
 			+ "WHERE "
-			+ "(COALESCE(:categories) IS NULL OR cats IN :categories) "
+			+ "(:categories IS NULL OR :categories IN cats) " //Perfil TEST - H2
 			+ "AND "
 			+ "(LOWER(obj.name) LIKE LOWER(CONCAT('%',:name,'%')) )")
 	Page<Product> findAllPagedCategoryName(List<Category> categories, String name, Pageable pageable);
 
-	//camada de acesso ao BD
-	//Já funciona, pois está herdando da Classe já Implementada JpaRepository<T, ID>
-	//T = tipo/nome da classe JPA (@Entity)
-	//ID = tipo do id definido na classe (nesse caso Long)
+	// COALESCE(:categories) IS NULL OR cats IN :categories // Perfil DEV - POSTGRES
+
 }

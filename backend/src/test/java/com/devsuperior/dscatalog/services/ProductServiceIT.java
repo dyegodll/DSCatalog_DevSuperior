@@ -38,7 +38,7 @@ public class ProductServiceIT {
 	@Test
 	public void findAllPagedShouldReturnSortedPageWhenSortByName() {
 		PageRequest page = PageRequest.of(0, 10, Sort.by("name")); //parâmetro pra ordenar a página por nome
-		Page<ProductDTO> result = service.findAllPaged(page);
+		Page<ProductDTO> result = service.findAllPagedCategoryName(0L, "", page);
 		Assertions.assertFalse(result.isEmpty());
 
 		//compara os 3 prineiros elementos da pág em ordem crescente
@@ -50,14 +50,14 @@ public class ProductServiceIT {
 	@Test
 	public void findAllPagedShouldReturnPageEmptyWhenPageDoesNotExist() {
 		PageRequest page = PageRequest.of(50, 10); //classe concreta de Pageable
-		Page<ProductDTO> result = service.findAllPaged(page);
+		Page<ProductDTO> result = service.findAllPagedCategoryName(0L, "", page);
 		Assertions.assertTrue(result.isEmpty());
 	}
 	
 	@Test
 	public void findAllPagedShouldReturnPageWhenPage0Size10() {
 		PageRequest page = PageRequest.of(0, 10); //classe concreta de Pageable
-		Page<ProductDTO> result = service.findAllPaged(page);
+		Page<ProductDTO> result = service.findAllPagedCategoryName(0L, "", page);
 		Assertions.assertFalse(result.isEmpty());
 		Assertions.assertEquals(0, result.getNumber());
 		Assertions.assertEquals(10, result.getSize());

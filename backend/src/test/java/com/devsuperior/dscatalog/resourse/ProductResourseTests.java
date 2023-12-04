@@ -18,7 +18,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
@@ -26,19 +27,23 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.devsuperior.dscatalog.dto.ProductDTO;
-import com.devsuperior.dscatalog.resources.ProductResource;
 import com.devsuperior.dscatalog.services.ProductService;
 import com.devsuperior.dscatalog.services.exceptions.DataBaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 import com.devsuperior.dscatalog.tests.Factory;
+import com.devsuperior.dscatalog.tests.TokenUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@WebMvcTest(ProductResource.class)   //anotation para testes de Controladores que carregam a camada web
+@SpringBootTest
+@AutoConfigureMockMvc
 public class ProductResourseTests {           
 
 	//objeto responsável pelas requisições (endpoints)
 	@Autowired //injeção de dependências
 	private MockMvc mockMvc;
+	
+	@Autowired
+	private TokenUtil tokenUtil;
 	
 	//simula o componente de dependência da classe, para testes unitários (sem testar a integração)
 	@MockBean
@@ -49,6 +54,8 @@ public class ProductResourseTests {
 	private Long existingId;
 	private Long nonExistingId;
 	private Long dependentId;
+	private String username;
+	private String password;
 	
 	@Autowired
 	ObjectMapper objectmapper;
@@ -63,10 +70,12 @@ public class ProductResourseTests {
 		existingId = 1L;
 		nonExistingId = 2L;
 		dependentId = 3L;
+		username = "maria@gmail.com";
+		password = "123456";
 		
 		//simula o objeto mockado na chamada dos métodos do componente dependente
 		//configura com qualquer argumento e seu retorno
-		when(service.findAllPaged( ArgumentMatchers.any() ) ).thenReturn(page);
+		when(service.findAllPagedCategoryName(ArgumentMatchers.any(), ArgumentMatchers.any(),  ArgumentMatchers.any() ) ).thenReturn(page);
 		
 		when(service.findById(existingId)).thenReturn(productDTO); //buscar para id existente
 		when(service.findById(nonExistingId)).thenThrow(ResourceNotFoundException.class); //Exceção para id Inexistente
@@ -94,7 +103,10 @@ public class ProductResourseTests {
 	
 	@Test
 	public void deleteShouldReturnNoContentWhenIdExists() throws Exception {
+		String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
+		
 		ResultActions result = mockMvc.perform( delete("/products/{id}", existingId)
+				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON)	);
 		
 		result.andExpect(status().isNoContent());
@@ -102,10 +114,12 @@ public class ProductResourseTests {
 	
 	@Test
 	public void insertShouldReturnProdctDTOCreated() throws Exception {
+		String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
 		
 		String jsonBody = objectmapper.writeValueAsString(productDTO);
 		
 		ResultActions result = mockMvc.perform( post("/products")
+				.header("Authorization", "Bearer " + accessToken)
 				.content(jsonBody)
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON) );
@@ -116,11 +130,13 @@ public class ProductResourseTests {
 	
 	@Test
 	public void updateShouldReturnProductDtoWhenIdExists() throws Exception{
+		String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
 		
 		//objectmapper converte o obj productDTO em texto para ser enviado no formato JSON
 		String jasonBody = objectmapper.writeValueAsString(productDTO);
 		
 		ResultActions result = mockMvc.perform(put("/products/{id}", existingId)
+				.header("Authorization", "Bearer " + accessToken)
 				.content(jasonBody) // informa a String da requisição (obj a ser atualizado em formato de texto)
 				.contentType(MediaType.APPLICATION_JSON) // informa o tipo de contúdo/texto da String
 				.accept(MediaType.APPLICATION_JSON)); //tipo da resposta enviada
@@ -134,10 +150,14 @@ public class ProductResourseTests {
 	
 	@Test
 	public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception{
+		
+		String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
+		
 		//converte obj productDTO em texto (para ser enviado no formato JSON)
 		String jasonBody = objectmapper.writeValueAsString(productDTO);
 		
 		ResultActions result = mockMvc.perform(put("/products/{id}", nonExistingId)
+				.header("Authorization", "Bearer " + accessToken)
 				.content(jasonBody) // informa a String da requisição (obj a ser atualizado em formato de texto)
 				.contentType(MediaType.APPLICATION_JSON) // informa o tipo de contúdo/texto da String
 				.accept(MediaType.APPLICATION_JSON)); //tipo da resposta enviada

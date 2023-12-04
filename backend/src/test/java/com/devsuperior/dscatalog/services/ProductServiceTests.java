@@ -65,15 +65,18 @@ public class ProductServiceTests {
 		//configura o comportamento do Objeto Mockado para métodos com Algum Tipo de RETORNO
 		//when(quando) + ArgumentMatchers(qualquer arg) + thenReturn(então retorne)
 		
-		Mockito.when(repository.findAll((Pageable)ArgumentMatchers.any())).thenReturn(page); //necessário CAST pelo tipo específico de PAGEABLE
 		when(repository.save(ArgumentMatchers.any())).thenReturn(product);
+
+		Mockito.when(repository.findAll((Pageable)ArgumentMatchers.any())).thenReturn(page); //necessário CAST pelo tipo específico de PAGEABLE
 		when(repository.findById(existingId)).thenReturn(Optional.of(product)); //retorna o obj present no Optional do ID existente
 		when(repository.findById(nonExistingId)).thenReturn(Optional.empty()); //retorna vazio quando ID não existir
 		
-		when(repository.getOne(existingId)).thenReturn(product);
-		when(repository.getOne(nonExistingId)).thenThrow(EntityNotFoundException.class);
-		when(categoryRepository.getOne(existingId)).thenReturn(category);
-		when(categoryRepository.getOne(nonExistingId)).thenThrow(EntityNotFoundException.class);
+		when(repository.getReferenceById(existingId)).thenReturn(product);
+		when(repository.getReferenceById(nonExistingId)).thenThrow(EntityNotFoundException.class);
+	
+		when(categoryRepository.getReferenceById(existingId)).thenReturn(category);
+		when(categoryRepository.getReferenceById(nonExistingId)).thenThrow(EntityNotFoundException.class);
+		
 		
 		//configura o comportamento do Objeto Mockado para métodos VOID
 		//ação(faça) + when(quando)
@@ -122,8 +125,8 @@ public class ProductServiceTests {
 	
 	@Test
 	public void findAllPagedShouldReturnsPage() {
-		Pageable pageable = PageRequest.of(0, 10);
-		Page<ProductDTO> result = service.findAllPaged(pageable);
+		Pageable pageable = PageRequest.of(0, 12);
+		Page<ProductDTO> result = service.findAllPagedCategoryName(0L, "", pageable);
 		Assertions.assertNotNull(result);
 		
 		Mockito.verify(repository).findAll(pageable);

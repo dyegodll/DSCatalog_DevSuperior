@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.tests.Factory;
+import com.devsuperior.dscatalog.tests.TokenUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
@@ -28,21 +29,30 @@ public class ProductResourseIT {
 	private MockMvc mockMvc;
 	
 	@Autowired
+	private TokenUtil tokenUtil;
+	
+	@Autowired
 	ObjectMapper objectmapper; //converte o obj em texto para ser enviado no formato JSON
 	
 	private Long existingId;
 	private Long nonExistingId;
 	private Long countTotalProducts;
+	private String username;
+	private String password;
 	
 	@BeforeEach
 	void setUp() throws Exception{
 		existingId = 1L;
 		nonExistingId = 1000L;
 		countTotalProducts = 25L;
+		username = "maria@gmail.com";
+		password = "123456";
 	}
 	
 	@Test
 	public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception{
+		
+		String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
 		
 		ProductDTO productDTO = Factory.createProductDTO();
 
@@ -50,6 +60,7 @@ public class ProductResourseIT {
 		String jasonBody = objectmapper.writeValueAsString(productDTO);
 		
 		ResultActions result = mockMvc.perform(put("/products/{id}", nonExistingId)
+				.header("Authorization", "Bearer " + accessToken)
 				.content(jasonBody) // informa a String da requisição (obj a ser atualizado em formato de texto)
 				.contentType(MediaType.APPLICATION_JSON) // informa o tipo de contúdo/texto da String
 				.accept(MediaType.APPLICATION_JSON)); //tipo da resposta enviada
@@ -61,6 +72,8 @@ public class ProductResourseIT {
 	@Test
 	public void updateShouldReturnProductDtoWhenIdExists() throws Exception{
 		
+		String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
+		
 		ProductDTO productDTO = Factory.createProductDTO();
 		String expectedName = productDTO.getName();
 		String expectedDescription = productDTO.getDescription();
@@ -69,6 +82,7 @@ public class ProductResourseIT {
 		String jasonBody = objectmapper.writeValueAsString(productDTO);
 		
 		ResultActions result = mockMvc.perform(put("/products/{id}", existingId)
+				.header("Authorization", "Bearer " + accessToken)
 				.content(jasonBody) // informa a String da requisição (obj a ser atualizado em formato de texto)
 				.contentType(MediaType.APPLICATION_JSON) // informa o tipo de contúdo/texto da String
 				.accept(MediaType.APPLICATION_JSON)); //tipo da resposta enviada
